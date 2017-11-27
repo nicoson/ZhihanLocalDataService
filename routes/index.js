@@ -2,25 +2,31 @@ var express = require('express');
 var router = express.Router();
 var DBConn = require('../model/DBConnection')
 
-/* GET home page. */
+/* local api - for test */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
 router.get('/astocknamelist', function(req, res, next) {
-    DBConn.getNameList(res, 'astock', 'updatelog');
+    let p = DBConn.getNameList('astock', 'updatelog');
+    p.then(e => res.send(e));
 });
 
 router.post('/astockdata', function(req, res, next) {
-    DBConn.getData(res, 'astock', req.body.table, req.body.start, req.body.end);
+    let p = DBConn.getData('astock', req.body.table, req.body.start, req.body.end);
+    p.then(e => res.send(e));
 });
 
 router.get('/futurenamelist', function(req, res, next) {
-    DBConn.getNameList(res, 'future', 'updatelog');
+    let p = DBConn.getNameList('future', 'updatelog');
+    p.then(e => res.send(e));
 });
 
 router.post('/futuredata', function(req, res, next) {
-    DBConn.getData(res, 'future', req.body.table, req.body.start, req.body.end);
+    let p = DBConn.getData('future', req.body.table, req.body.start, req.body.end);
+    p.then(e => res.send(e));
 });
 
+
+// middle ware api
 module.exports = router;
