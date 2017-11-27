@@ -1,6 +1,6 @@
 var http = require('http');
-var DBConn = require('../model/DBConnection')
-
+var DBConn = require('../model/DBConnection');
+const querystring = require("querystring");
 
 function Detector(){};
 
@@ -20,10 +20,10 @@ Detector.init = function() {
             res.setEncoding('utf8');
             res.on('data', (chunk) => {
                 data += chunk;
-                console.log(`BODY: ${chunk}`);
+                console.log(`GET BODY: ${chunk}`);
             });
             res.on('end', () => {
-                resolve(data);    
+                resolve(JSON.parse(data));    
             });
         });
 
@@ -34,40 +34,79 @@ Detector.init = function() {
 
         req.end();
     }).then(function(data) {
-        return new Promise(function(resolve, reject){
-            let options = {
-                method: "POST",
-                host: "localhost",
-                port: 80,
-                path: '/feedbackdata',
-                headers: {
-                    "Content-Type": 'application/x-www-form-urlencoded'
+        let jobname = Object.keys(data).filter(e => (e.length == 13));
+        for(let i in data)console.log(data[i]);
+        if(jobname.length == 0) {
+            console.log('========>  no jobs')
+        }else{
+            console.log("========>  current jobs");
+            console.log(data);
+
+            let jobList = [];
+            let p = '';
+            for(let i in jobname) {
+                if(data[jobname[i]].start == undefined){
+                    p = DBConn.getNameList(data[jobname[i]].db, data[jobname[i]].table);
+                }else{
+                    p = DBConn.getData(data[jobname[i]].db, data[jobname[i]].table, data[jobname[i]].start, data[jobname[i]].end);
                 }
-            };
+                jobList.push(p);
+            }
 
-            let req = http.request(options, (res) => {
-                // console.log(`STATUS: ${res.statusCode}`);
-                // console.log(`HEADERS: ${JSON.stringify(res.headers)}`); 
-                let body = "";  
-                res.setEncoding('utf8');
-                res.on('data', (chunk) => {
-                    body += chunk;
-                    console.log(`BODY: ${chunk}`);
+            console.log('==========>    start to handle jobs');
+            Promise.all(jobList).then(function(result){
+                let sqlData = {}
+                for(let i in jobname) {
+                    sqlData[jobname[i]] = result[i];
+                }
+                return new Promise(function(resolve, reject){
+                    resolve(sqlData)
                 });
-                res.on('end', () => {
-                    // console.log('No more data in response.');
-                    resolve(body);
+            }).then(function(data) {
+                console.log('==========>    start to post jobs results');
+                console.log(data);
+                return new Promise(function(resolve, reject){
+                    let options = {
+                        method: "POST",
+                        host: "localhost",
+                        port: 80,
+                        path: '/feedbackdata',
+                        headers: {
+                            "Content-Type": 'application/json'
+                        }
+                    };
+
+                    let req = http.request(options, (res) => {
+                        // console.log(`STATUS: ${res.statusCode}`);
+                        // console.log(`HEADERS: ${JSON.stringify(res.headers)}`); 
+                        let body = "";  
+                        res.setEncoding('utf8');
+                        res.on('data', (chunk) => {
+                            body += chunk;
+                            console.log(`POST BODY: ${chunk}`);
+                        });
+                        res.on('end', () => {
+                            // console.log('No more data in response.');
+                            resolve(body);
+                        });
+                    });
+
+                    req.on('error', (e) => {
+                        console.log(`problem with request: ${e.message}`);
+                        reject(e)
+                    });
+
+                    // write data to request body
+                    req.write(JSON.stringify({sqlData: data}));
+                    req.end();
                 });
+            }).then(function(res){
+                console.log("==========>    data posted");
             });
+        }
 
-            req.on('error', (e) => {
-                console.log(`problem with request: ${e.message}`);
-                reject(e)
-            });
-
-            // write data to request body
-            req.write(data)
-            req.end();
+        return new Promise(function(resolve, reject){
+            resolve("next round")
         });
     }).then(function(res) {
         console.log(res);

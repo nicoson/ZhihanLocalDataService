@@ -1,30 +1,15 @@
-var http = require('http');
-var mysql = require('mysql');
+var p1 = new Promise(function (resolve) {
+    setTimeout(function () {
+        resolve([1,2,3]);
+    }, 3000);
+});
 
-(function init() {
-    // let that = this;
-    let options = {
-        hostname: 'localhost',
-        path: '/getjobs',
-    };
+var p2 = new Promise(function (resolve) {
+    setTimeout(function () {
+        resolve({a:1,b:2});
+    }, 1000);
+});
 
-    let req = http.request(options, (res) => {
-        // console.log(`STATUS: ${res.statusCode}`);
-        // console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-            console.log(`BODY: ${chunk}`);
-        });
-        res.on('end', () => {
-            // console.log('No more data in response.');
-            setTimeout(function(){console.log('========>    next round  ...'); init();}, 2000);
-        });
-    });
-
-    req.on('error', (e) => {
-        console.log(`problem with request: ${e.message}`);
-    });
-
-    // write data to request body
-    req.end();
-})()
+Promise.all([p1, p2]).then(function (result) {
+    console.log(result); // ["Hello", "World"]
+});
