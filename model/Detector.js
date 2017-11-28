@@ -115,6 +115,11 @@ Detector.init = function() {
         setTimeout(function(){
             that.init();
         }, 3000);
+    }).catch(function(res) {
+        console.log(res);
+        setTimeout(function(){
+            that.init();
+        }, 3000);
     });
 }
 
