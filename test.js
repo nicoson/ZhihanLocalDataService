@@ -1,15 +1,28 @@
-var p1 = new Promise(function (resolve) {
-    setTimeout(function () {
-        resolve([1,2,3]);
-    }, 3000);
-});
+var http = require('http');
+const publicServer = 'zhihanpublicservice.azurewebsites.net';
+new Promise(function(resolve, reject){
+    let options = {
+        method: 'GET',
+        host: publicServer,
+        path: '/getjobs'
+    };
 
-var p2 = new Promise(function (resolve) {
-    setTimeout(function () {
-        resolve({a:1,b:2});
-    }, 1000);
-});
+    let req = http.get(options, (res) => {
+        let data = '';
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+            data += chunk;
+            console.log(`GET BODY: ${chunk}`);
+        });
+        res.on('end', () => {
+            resolve(JSON.parse(data));
+        });
+    });
 
-Promise.all([p1, p2]).then(function (result) {
-    console.log(result); // ["Hello", "World"]
-});
+    req.on('error', (e) => {
+        console.log(`problem with request: ${e.message}`);
+        reject(e);
+    });
+
+    req.end();
+}).then(e=>console.log(e));

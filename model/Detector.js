@@ -1,6 +1,8 @@
 var http = require('http');
 var DBConn = require('../model/DBConnection');
 const querystring = require("querystring");
+const publicServer = 'zhihanpublicservice.azurewebsites.net';
+// const publicServer = 'localhost';
 
 function Detector(){};
 
@@ -9,11 +11,11 @@ Detector.init = function() {
     
     new Promise(function(resolve, reject){
         let options = {
-            hostname: 'localhost',
+            hostname: publicServer,
             path: '/getjobs',
         };
 
-        let req = http.request(options, (res) => {
+        let req = http.get(options, (res) => {
             // console.log(`STATUS: ${res.statusCode}`);
             // console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
             let data = '';
@@ -68,8 +70,8 @@ Detector.init = function() {
                 return new Promise(function(resolve, reject){
                     let options = {
                         method: "POST",
-                        host: "localhost",
-                        port: 80,
+                        host: publicServer,
+                        // port: 80,
                         path: '/feedbackdata',
                         headers: {
                             "Content-Type": 'application/json'
@@ -112,7 +114,7 @@ Detector.init = function() {
         console.log(res);
         setTimeout(function(){
             that.init();
-        }, 2000);
+        }, 3000);
     });
 }
 
