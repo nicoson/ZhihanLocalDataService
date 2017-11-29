@@ -71,8 +71,10 @@ function handleRows(data) {
                 res[keyword[i]].push(data[j][keyword[i]])
             }
         }
+        console.log("==========>    ", res.ID.length, " data derived");
     } else {
         res = {data: null};
+        console.log("==========>    no related data");
     }
     return res;
 }
