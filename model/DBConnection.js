@@ -61,7 +61,7 @@ DBConn.getNameList = function(db, table) {
 
 function handleRows(data) {
     let res = {}
-    if(data.length > 0) {
+    if(data != undefined && data != null && data.length > 0) {
         let keyword = Object.keys(data[0]);
         for(let i=0; i<keyword.length; i++) {
             res[keyword[i]] = [];
