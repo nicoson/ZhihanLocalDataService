@@ -21,8 +21,8 @@ DBConn.getData = function(db, table, start, end) {
             if (err) {
                 reject(err);
             }
-            // console.log('The result is: ', rows);
-            resolve(rows);
+            console.log(handleRows(rows));
+            resolve(handleRows(rows));
         });
         //  close connection
         connection.end();
@@ -57,6 +57,24 @@ DBConn.getNameList = function(db, table) {
     });
 
     return p;
+}
+
+function handleRows(data) {
+    let res = {}
+    if(data.length > 0) {
+        let keyword = Object.keys(data[0]);
+        for(let i=0; i<keyword.length; i++) {
+            res[keyword[i]] = [];
+            // console.log(keyword[i])
+
+            for(let j=0; j<data.length; j++) {
+                res[keyword[i]].push(data[j][keyword[i]])
+            }
+        }
+    } else {
+        res = {data: null};
+    }
+    return res;
 }
 
 // console.log(DBConn.getData())

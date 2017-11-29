@@ -66,7 +66,7 @@ Detector.init = function() {
                 });
             }).then(function(data) {
                 console.log('==========>    start to post jobs results');
-                console.log(data);
+                // console.log(data);
                 return new Promise(function(resolve, reject){
                     let options = {
                         method: "POST",
