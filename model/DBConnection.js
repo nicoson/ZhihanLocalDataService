@@ -21,7 +21,7 @@ DBConn.getData = function(db, table, start, end) {
             if (err) {
                 reject(err);
             }
-            console.log(handleRows(rows));
+            // console.log(handleRows(rows));
             resolve(handleRows(rows));
         });
         //  close connection

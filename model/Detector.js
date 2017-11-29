@@ -65,6 +65,7 @@ Detector.init = function() {
                     resolve(sqlData)
                 });
             }).then(function(data) {
+                console.log("==========>    ", data.length, " data derived")
                 console.log('==========>    start to post jobs results');
                 // console.log(data);
                 return new Promise(function(resolve, reject){
