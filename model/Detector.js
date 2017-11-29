@@ -30,7 +30,7 @@ Detector.init = function() {
         });
 
         req.on('error', (e) => {
-            console.log(`problem with request: ${e.message}`);
+            console.log(`problem with get request: ${e.message}`);
             reject(e);
         });
 
@@ -94,7 +94,7 @@ Detector.init = function() {
                     });
 
                     req.on('error', (e) => {
-                        console.log(`problem with request: ${e.message}`);
+                        console.log(`problem with post request: ${e.message}`);
                         reject(e)
                     });
 
