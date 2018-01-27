@@ -18,12 +18,12 @@ router.post('/astockdata', function(req, res, next) {
 });
 
 router.get('/futurenamelist', function(req, res, next) {
-    let p = DBConn.getNameList('future', 'updatelog');
+    let p = DBConn.getNameList('future_l2', 'updatelog');
     p.then(e => res.send(e));
 });
 
 router.post('/futuredata', function(req, res, next) {
-    let p = DBConn.getData('future', req.body.table, req.body.start, req.body.end);
+    let p = DBConn.getData('future_l2', req.body.table, req.body.start, req.body.end);
     p.then(e => res.send(e));
 });
 
