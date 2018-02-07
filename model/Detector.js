@@ -3,6 +3,8 @@ var DBConn = require('../model/DBConnection');
 const querystring = require("querystring");
 const publicServer = 'zhihanpublicservice.azurewebsites.net';
 // const publicServer = 'localhost';
+const URL_GETJOBS = '/getjobs';
+const URL_FEEDBACKADDRESS = '/feedbackdata';
 
 function Detector(){};
 
@@ -12,7 +14,7 @@ Detector.init = function() {
     new Promise(function(resolve, reject){
         let options = {
             hostname: publicServer,
-            path: '/getjobs',
+            path: URL_GETJOBS,
         };
 
         let req = http.get(options, (res) => {
@@ -36,6 +38,7 @@ Detector.init = function() {
 
         req.end();
     }).then(function(data) {
+        // data[key] is the unique id for each data request
         let jobname = Object.keys(data).filter(e => (e.length == 13));
         for(let i in data)console.log(data[i]);
         if(jobname.length == 0) {
@@ -72,7 +75,7 @@ Detector.init = function() {
                         method: "POST",
                         host: publicServer,
                         // port: 80,
-                        path: '/feedbackdata',
+                        path: URL_FEEDBACKADDRESS,
                         headers: {
                             "Content-Type": 'application/json'
                         }

@@ -1,14 +1,17 @@
 //connection to database
-var mysql = require('mysql');
+const mysql = require('mysql');
+const HOST = '127.0.0.1';
+const USER = 'root';
+const PASSWORD = 'root';
 
 function DBConn(){};
 
 DBConn.getData = function(db, table, start, end) {
     //  config database
     let connection = mysql.createConnection({
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'root',
+        host: HOST,
+        user: USER,
+        password: PASSWORD,
         database: db
     });
 
@@ -34,9 +37,9 @@ DBConn.getData = function(db, table, start, end) {
 DBConn.getNameList = function(db, table) {
     //  config database
     let connection = mysql.createConnection({
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'root',
+        host: HOST,
+        user: USER,
+        password: PASSWORD,
         database: db
     });
 
