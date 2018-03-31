@@ -27,6 +27,16 @@ router.post('/futuredata', function(req, res, next) {
     p.then(e => res.send(e));
 });
 
+router.get('/indexnamelist', function(req, res, next) {
+    let p = DBConn.getNameList('securityindex', null);
+    p.then(e => res.send(e));
+});
+
+router.post('/indexdata', function(req, res, next) {
+    let p = DBConn.getIndexData('securityindex', req.body.table, req.body.start, req.body.end);
+    p.then(e => res.send(e));
+});
+
 
 // middle ware api
 module.exports = router;
