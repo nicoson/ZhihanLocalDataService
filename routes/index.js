@@ -33,7 +33,7 @@ router.get('/indexnamelist', function(req, res, next) {
 });
 
 router.post('/indexdata', function(req, res, next) {
-    let p = DBConn.getIndexData('securityindex', req.body.table, req.body.start, req.body.end);
+    let p = DBConn.getData('securityindex', req.body.table, req.body.start, req.body.end);
     p.then(e => res.send(e));
 });
 
